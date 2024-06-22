@@ -50,6 +50,11 @@ def obtener_tareas():
     resultado = tareas_schema.dump(todas_las_tareas)
     return jsonify(resultado)
 
+# Definir el endpoint para obtener tarea por ID
+@app.route('/tareas/<int:id>', methods=['GET'])
+def obtener_tarea(id):
+    tarea = Tarea.query.get(id)
+    return tarea_schema.jsonify(tarea)
 
 
 
