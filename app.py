@@ -3,14 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:pamejuly@localhost:3306/apiflask'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:pamejuly@localhost:3306/apitareas'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 bdd = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 class Tarea(bdd.Model):
-    __tablename__ = 'Tareas'
+    __tablename__ = 'tareas'
 
     id = bdd.Column(bdd.Integer, primary_key=True, autoincrement=True)
     descripcion = bdd.Column(bdd.Text, nullable=False)
@@ -30,6 +30,18 @@ class TareaSchema(ma.SQLAlchemyAutoSchema):
 tarea_schema = TareaSchema()
 tareas_schema = TareaSchema(many=True)
 
+
+# Definir el endpoint para crear una nueva tarea
+@app.route('/tareas', methods=['POST'])
+def crear_tarea():
+    descripcion = request.json['descripcion']
+    fecha_maxima = request.json['fecha_maxima']
+    nueva_tarea = Tarea(descripcion=descripcion, fecha_maxima=fecha_maxima)
+    
+    bdd.session.add(nueva_tarea)
+    bdd.session.commit()
+    
+    return tarea_schema.jsonify(nueva_tarea)
 
 if __name__ == '__main__':
     app.run(debug=True)
