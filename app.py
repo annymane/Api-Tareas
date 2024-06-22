@@ -69,6 +69,21 @@ def eliminar_tarea(id):
     
     return jsonify({'message': 'Tarea eliminada correctamente'})
 
+# Definir el endpoint para modificar una tarea
+@app.route('/tareas/<int:id>', methods=['PUT'])
+def actualizar_tarea(id):
+    tarea = Tarea.query.get(id)
+    if not tarea:
+        return jsonify({'message': 'Tarea no encontrada'}), 404
+    
+    descripcion = request.json['descripcion']
+    fecha_maxima = request.json['fecha_maxima']
+    tarea.descripcion = descripcion
+    tarea.fecha_maxima = fecha_maxima
+    bdd.session.commit()
+    
+    return jsonify({'message': 'Tarea actualizada correctamente'})
+
 
 
 if __name__ == '__main__':
