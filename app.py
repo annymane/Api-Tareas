@@ -43,5 +43,15 @@ def crear_tarea():
     
     return tarea_schema.jsonify(nueva_tarea)
 
+# Definir el endpoint para obtener todas las tareas
+@app.route('/tareas', methods=['GET'])
+def obtener_tareas():
+    todas_las_tareas = Tarea.query.all()
+    resultado = tareas_schema.dump(todas_las_tareas)
+    return jsonify(resultado)
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
