@@ -57,6 +57,19 @@ def obtener_tarea(id):
     return tarea_schema.jsonify(tarea)
 
 
+# Definir el endpoint para eliminar una tarea
+@app.route('/tareas/<int:id>', methods=['DELETE'])
+def eliminar_tarea(id):
+    tarea = Tarea.query.get(id)
+    if not tarea:
+        return jsonify({'message': 'Tarea no encontrada'}), 404
+    
+    bdd.session.delete(tarea)
+    bdd.session.commit()
+    
+    return jsonify({'message': 'Tarea eliminada correctamente'})
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
